@@ -1,0 +1,271 @@
+TalentLens AI — Gen AI Capstone Project Brief
+
+Project Overview
+- Title: TalentLens AI
+- Description: An Intelligent Recruitment Co-pilot Powered by Retrieval-Augmented Generation and Generative AI
+- Track: Gen AI Phase · RAG Systems
+- Duration: 4 Weeks
+- Team Size: 1–2 students
+
+Problem Statement
+Modern recruiters are overwhelmed by unstructured data. For each open role, they review resumes, compare against job descriptions, recall internal rubrics, and craft interview questions—often without dedicated tools.
+
+Mission
+Build an AI co-pilot for recruiters. The recruiter uploads a candidate resume, selects a target role from a job description library, and interacts with the system in natural language—asking questions, requesting fit analysis, and generating tailored interview questions—grounded in source documents with citations.
+
+Industry Context
+This product pattern mirrors offerings from BrightHire, Eightfold AI, HireVue, Paradox, and modern ATS systems (2025–26). HR-tech is a fast-growing Gen AI vertical with strict fairness requirements (NYC Local Law 144, EU AI Act). This is a commercial-grade product pattern.
+
+Learning Objectives
+1. Design and implement multi-source Retrieval-Augmented Generation with query routing across three corpora.
+2. Build a golden evaluation set and run an LLM-as-judge pipeline validated against human labels.
+3. Implement conversational follow-up handling using query rewriting.
+4. Combine structured generation (JSON extraction from resumes) with unstructured generation (answers, interview questions).
+5. Deploy a Gen AI service as an HTTP API and track cost/latency per query.
+6. Analyze fairness, bias, and explainability risks in AI-based hiring.
+
+System Architecture (Flow Chart)
+
+Recruiter Chat (UI)
+        |
+        v
+Query Router + LLM (rewrites follow-ups, routes to corpora)
+        |
+        +---------------------------+---------------------------+
+        |                           |                           |
+        v                           v                           v
+Resume (session-scoped)        JD Library (persistent)    Hiring Policies (persistent)
+        \                           |                           /
+         \                          |                          /
+          +-------------------------+-------------------------+
+                                 |
+                                 v
+Hybrid Retriever (BM25 + dense + reranker)
+                                 |
+                                 v
+Generator
+ - Answer with citations
+ - Match score + rationale
+ - Interview question set
+                                 |
+                                 v
+Observability Layer (cost, latency, logs)
+
+Three Retrieval Sources
+1. Resume (session-scoped, uploaded)
+   - Example queries: “What’s this candidate’s Python experience?” “Which ML projects have they worked on?”
+2. JD Library (persistent, shared)
+   - Example queries: “Compare to our Senior Data Scientist JD” “Which open roles fit this candidate best?”
+3. Hiring Policies (persistent, shared)
+   - Example queries: “What’s our bar for senior hires?” “What rubric do we use for system design rounds?”
+
+Functional Scope (Features)
+F1 — Resume Upload & Structured Parsing
+- Accept PDF/DOCX
+- Use LLM to extract: name, years of experience, skills, past roles, education, projects
+- Store structured JSON alongside embeddings
+
+F2 — Multi-Source Retrieval with Routing
+- Decide which corpus/corpora to query
+- Hybrid retrieval: BM25 + dense embeddings + cross-encoder reranker
+
+F3 — Resume ↔ JD Match Scorer
+- Output 0–100 score with breakdown (skills/experience/domain)
+- Provide bulleted rationale with citations from resume and JD
+
+F4 — Conversational Follow-ups
+- Handle references like “what about that?” or “reduce it?”
+- Use query rewriting with conversation history before retrieval
+
+F5 — Tailored Interview Question Generator
+- Generate 8–12 interview questions
+- Tag each by topic, difficulty, and rationale
+- Grounded in hiring rubric
+
+F6 — Bias & Fairness Guardrails (Stretch)
+- Refuse or flag queries relying on protected attributes
+- Log flagged queries for audit
+- Document policy in model card
+
+Technology Stack
+- Language: Python 3.10+
+- Embeddings: sentence-transformers/bge-small-en-v1.5 or OpenAI text-embedding-3-small
+- Vector DB: chromadb
+- Keyword index: rank_bm25
+- Reranker: BAAI/bge-reranker-base (cross-encoder)
+- LLM: Claude Haiku · GPT-4o-mini · or local Ollama (qwen2.5:3b)
+- PDF parsing: pypdf or pdfplumber
+- API framework: FastAPI
+- Deployment: Render · Railway · Fly.io (free tier)
+- Eval: ragas + custom LLM-judge module
+
+Important Implementation Constraints
+- Build RAG by hand (no LangChain or LlamaIndex).
+- UI is not the focus—keep it simple.
+- Minimum UI requirements: resume upload, multi-turn chat, citations, match scorer, interview question generator.
+- Allowed UI approaches:
+  - FastAPI Swagger UI (/docs)
+  - Streamlit chat UI
+  - Gradio ChatInterface
+- You can skip deployment if instructed, but live URL is part of the default rubric.
+
+Data Sources
+Resumes (public datasets)
+- Kaggle · Livecareer Resume Dataset (2,400+ resumes)
+- Kaggle · Resume Dataset (categorized by role)
+- Hugging Face · InferencePrince555/Resume-Dataset
+
+Job Descriptions
+- Kaggle · LinkedIn Job Postings 2023
+- Kaggle · Job Description Dataset
+- Student-curated: 10–20 JDs from real company career pages
+
+Hiring Policies & Interview Rubrics
+- GitLab Handbook · Interview Guides section
+- Student-authored rubric modeled on industry standards
+
+Data Scope Recommendation
+Pick one role family (e.g., Data/ML or Full-stack) to keep the corpus focused.
+
+Weekly Milestones
+Week 1 — Foundation
+- Finalize and ingest corpus (resumes + 10 JDs + policies)
+- Resume upload + LLM-based structured parsing
+- Single-corpus RAG end-to-end (resume)
+- First 30 golden Q&A pairs drafted
+Checkpoint: demo upload resume, ask 3 factual questions, show citations; review eval format
+
+Week 2 — Multi-source RAG
+- All 3 corpora indexed with per-source metadata
+- Query router routing to correct corpus
+- Match scorer v1 (embedding cosine + heuristics)
+- Golden eval set complete: 100 cases across 3 types
+Checkpoint: review eval quality; spot-check 10 cases
+
+Week 3 — Intelligence layer
+- Hybrid retrieval (BM25 + dense) + cross-encoder reranker
+- LLM-based match rationale with citations
+- Conversational follow-ups via query rewriting
+- Interview question generator
+- LLM-as-judge pipeline validated against ≥20 human-scored samples
+Checkpoint: demo multi-turn convo; review judge-vs-human agreement
+
+Week 4 — Production polish
+- Cost + latency tracking per query
+- Bias/fairness guardrails (stretch)
+- Failure analysis: top 20 worst cases categorized
+- FastAPI endpoint deployed with public URL
+- Final report (5–8 pages) + model card
+- 5–7 minute demo video
+Checkpoint: final viva, live walkthrough, eval results, failure analysis
+
+Deliverables
+1. GitHub repo with README, requirements.txt, one-command setup
+2. Deployed FastAPI endpoint with public URL and routes:
+   - POST /upload_resume
+   - POST /chat
+   - POST /match
+   - POST /interview_questions
+3. Golden eval set (JSON, 100 cases)
+4. Evaluation report: recall@k, MRR, judge-vs-human agreement, cost/latency
+5. Model card: intended use, training data, failure modes, fairness policy
+6. Final report (5–8 pages): architecture, decisions, failure analysis, limitations, lessons learned
+7. Demo video (5–7 minutes)
+
+Evaluation Rubric (100 points)
+1. Working End-to-End System — 15
+   - All F1–F5 working on live URL, no critical bugs, citations in every answer
+2. Golden Eval Set Quality — 15
+   - 100 test cases across 3 types, diverse and accurate, human-authored
+3. Evaluation Harness Rigor — 20
+   - recall@5 + MRR; judge-vs-human validation on ≥20 samples; reproducible
+4. Match Scorer Correlation — 10
+   - Spearman ρ ≥ 0.5 on ≥30 labeled pairs; citations in rationale
+5. Conversational Handling — 10
+   - Query rewriting works on ≥10 follow-ups; comparison vs history-in-prompt
+6. Failure Analysis — 10
+   - Top 20 failures categorized with mitigations
+7. Report, Model Card & Fairness — 10
+   - Clear tradeoffs, standard model card, real regulation references
+8. Deployment & Observability — 10
+   - Live endpoint, cost + latency logging, dashboard/CSV export
+
+Automatic Penalties
+- Using LangChain/LlamaIndex chains: −15
+- Eval set generated by LLM (not handwritten): −10
+- No citations in generated answers: −10
+- No public deployment URL at viva: −10
+
+Golden Eval Set Format (Required)
+Type A — Factual Retrieval (50 cases)
+{
+  "id": "A017",
+  "type": "factual_retrieval",
+  "resume_id": "res_042",
+  "question": "What was the candidate's role at Infosys?",
+  "reference_answer": "Senior Data Engineer (Mar 2020 – Jul 2023)",
+  "expected_source_span": "Experience > Infosys > lines 14-15",
+  "difficulty": "easy"
+}
+
+Type B — Match Quality (30 cases)
+{
+  "id": "B008",
+  "type": "match_quality",
+  "resume_id": "res_042",
+  "jd_id": "jd_senior_ml_engineer",
+  "human_label": "weak_match",
+  "human_score": 45,
+  "rationale_keywords": ["no production ML", "strong data engineering", "missing MLOps", "Python strong"]
+}
+
+Type C — Interview Question Quality (20 cases)
+{
+  "id": "C003",
+  "type": "interview_quality",
+  "resume_id": "res_042",
+  "jd_id": "jd_senior_ml_engineer",
+  "judge_criteria": {
+    "relevance_to_jd": "Does the question test a JD skill?",
+    "specificity_to_resume": "Does it reference a specific project/tech?",
+    "difficulty_calibration": "Is it appropriate for the seniority?"
+  },
+  "human_scored_sample": true
+}
+
+Eval Set Guidance
+- Build by hand; LLM-generated eval sets are penalized.
+- 100 cases total across 3 types.
+
+Common Pitfalls
+- Delaying the eval set past Week 2
+- Trusting judge scores without human validation
+- Naive chunking (splitting resumes mid-project)
+- Ignoring retrieval failures
+- Over-engineering before measuring baselines
+- Treating fairness as an afterthought
+
+References & Reading
+Papers
+- Lewis et al. — Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (2020)
+- Gao et al. — Retrieval-Augmented Generation for Large Language Models: A Survey (2024)
+- Es et al. — RAGAS: Automated Evaluation of Retrieval Augmented Generation (2023)
+
+Industry Writing
+- Anthropic — Contextual Retrieval engineering blog
+- OpenAI — Evals framework documentation
+- Databricks — Building High-Quality RAG Applications
+
+Regulation on AI in Hiring
+- NYC Local Law 144 — Automated Employment Decision Tools
+- EU AI Act — High-Risk Systems (Annex III, employment)
+- EEOC — Guidance on AI in Employment Decisions (US)
+
+Tooling Documentation
+- ChromaDB: docs.trychroma.com
+- sentence-transformers: sbert.net
+- FastAPI: fastapi.tiangolo.com
+
+Notes
+- UI is not the focus; use simple interfaces or existing snippets.
+- Deployment may be skipped if explicitly allowed, but it is part of the rubric by default.
