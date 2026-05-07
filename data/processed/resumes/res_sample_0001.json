@@ -1,0 +1,71 @@
+{
+  "id": "res_sample_0001",
+  "raw_text_path": "data/samples/resume_alex_johnson.txt",
+  "processed_at": "2026-05-07T15:08:00Z",
+  "structured": {
+    "name": "Alex Johnson",
+    "contact": {
+      "email": "alex.johnson@example.com",
+      "phone": "+1-555-0134",
+      "location": "Austin, TX"
+    },
+    "summary": "Data Scientist with 6 years of experience building ML products in fintech and SaaS.",
+    "experience": [
+      {
+        "company": "BlueWave Analytics",
+        "title": "Senior Data Scientist",
+        "dates": "Jan 2021 – Present",
+        "highlights": [
+          "Reduced churn by 18% using XGBoost and SHAP.",
+          "Built real-time anomaly detection in Spark Streaming.",
+          "Shipped an NLP feedback classifier with 0.89 F1."
+        ]
+      },
+      {
+        "company": "Pixel Labs",
+        "title": "Data Scientist",
+        "dates": "Jun 2018 – Dec 2020",
+        "highlights": [
+          "Improved activation by 12% with A/B testing.",
+          "Reduced training time by 30% via feature store in AWS.",
+          "Built Tableau dashboards."
+        ]
+      }
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Spark",
+      "scikit-learn",
+      "PyTorch",
+      "XGBoost",
+      "Airflow",
+      "Docker",
+      "AWS",
+      "Tableau"
+    ],
+    "education": [
+      {
+        "degree": "M.S. Data Science",
+        "school": "University of Texas at Austin",
+        "year": "2018"
+      },
+      {
+        "degree": "B.S. Computer Science",
+        "school": "Texas A&M University",
+        "year": "2016"
+      }
+    ],
+    "projects": [
+      {
+        "name": "SmartSupport",
+        "summary": "Fine-tuned transformer model to route customer tickets."
+      },
+      {
+        "name": "Retail Demand Forecasting",
+        "summary": "LSTM model for weekly SKU demand with MAPE 8.5%."
+      }
+    ]
+  },
+  "text": "Alex Johnson\nEmail: alex.johnson@example.com | Phone: +1-555-0134 | Location: Austin, TX\n\nSummary\nData Scientist with 6 years of experience building ML products in fintech and SaaS. Focused on churn prediction, NLP, and real-time analytics.\n\nSkills\nPython, SQL, Spark, scikit-learn, PyTorch, XGBoost, Airflow, Docker, AWS (S3, SageMaker, Lambda), Tableau\n\nExperience\nSenior Data Scientist — BlueWave Analytics (Jan 2021 – Present)\n- Led churn prediction model that reduced customer attrition by 18% using XGBoost and SHAP.\n- Built real-time anomaly detection pipeline in Spark Streaming for payment risk.\n- Partnered with Product to ship an NLP-powered feedback classifier (BERT) with 0.89 F1.\n\nData Scientist — Pixel Labs (Jun 2018 – Dec 2020)\n- Designed A/B testing framework for onboarding experiments, improving activation by 12%.\n- Created feature store in AWS S3 + Glue; reduced training time by 30%.\n- Built dashboards in Tableau for executive reporting.\n\nProjects\n- SmartSupport: fine-tuned transformer model to route customer tickets; reduced response time by 22%.\n- Retail Demand Forecasting: LSTM model for weekly SKU demand, achieving MAPE of 8.5%.\n\nEducation\nM.S. Data Science — University of Texas at Austin (2018)\nB.S. Computer Science — Texas A&M University (2016)\n\nCertifications\nAWS Certified Machine Learning – Specialty (2022)\n"
+}
