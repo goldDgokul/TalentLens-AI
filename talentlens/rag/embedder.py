@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import hashlib
+import zlib
 from typing import Iterable
 
 import numpy as np
@@ -32,9 +32,7 @@ class Embedder:
     def _hash_embed(self, text: str, dims: int = 256) -> list[float]:
         vector = np.zeros(dims, dtype=float)
         for token in text.lower().split():
-            # MD5 is used here for deterministic hashing, not for security.
-            digest = hashlib.md5(token.encode("utf-8")).digest()
-            index = digest[0] % dims
+            index = zlib.crc32(token.encode("utf-8")) % dims
             vector[index] += 1.0
         norm = np.linalg.norm(vector)
         if norm:

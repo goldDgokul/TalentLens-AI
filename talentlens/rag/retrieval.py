@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from typing import Any
 
 import chromadb
@@ -35,8 +36,6 @@ class ResumeRetriever:
                 include=["documents", "metadatas"],
                 where=where_clause,
             )
-            import re
-
             query_tokens = set(re.findall(r"[a-z0-9]+", query.lower()))
             title_hint = bool({"title", "company", "employer", "current"} & query_tokens)
             scored: list[RetrievedChunk] = []

@@ -70,11 +70,17 @@ def normalize_resumes(raw_dir: Path | None = None, output_dir: Path | None = Non
         if not text_column:
             continue
         category_column = _find_column(frame.columns, RESUME_CATEGORY_COLUMNS)
-        for row_index, row in frame.iterrows():
-            text = str(row.get(text_column, "")).strip()
+        columns = list(frame.columns)
+        text_idx = columns.index(text_column)
+        category_idx = columns.index(category_column) if category_column else None
+        for row in frame.itertuples(index=True, name=None):
+            row_index = row[0]
+            text = str(row[text_idx + 1]).strip()
             if not text:
                 continue
-            category = str(row.get(category_column, "")).strip() if category_column else ""
+            category = (
+                str(row[category_idx + 1]).strip() if category_idx is not None else ""
+            )
             if category and not _matches_role_family(category, settings.role_family):
                 if not _matches_role_family(text, settings.role_family):
                     continue
@@ -124,11 +130,15 @@ def normalize_job_descriptions(
         title_column = _find_column(frame.columns, JD_TITLE_COLUMNS)
         if not text_column:
             continue
-        for row_index, row in frame.iterrows():
-            text = str(row.get(text_column, "")).strip()
+        columns = list(frame.columns)
+        text_idx = columns.index(text_column)
+        title_idx = columns.index(title_column) if title_column else None
+        for row in frame.itertuples(index=True, name=None):
+            row_index = row[0]
+            text = str(row[text_idx + 1]).strip()
             if not text:
                 continue
-            title = str(row.get(title_column, "")).strip() if title_column else ""
+            title = str(row[title_idx + 1]).strip() if title_idx is not None else ""
             combined = f"{title} {text}"
             if not _matches_role_family(combined, settings.role_family):
                 continue
