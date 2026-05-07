@@ -24,12 +24,13 @@ class ResumeRetriever:
         self.client = chromadb.PersistentClient(path=str(settings.chroma_dir))
         self.collection = self.client.get_or_create_collection(collection_name)
         self.embedder = Embedder()
+        self.use_hash_backend = self.embedder.backend == "hash"
 
     def retrieve(
         self, query: str, top_k: int = 4, resume_id: str | None = None
     ) -> list[RetrievedChunk]:
         where_clause = {"resume_id": resume_id} if resume_id else None
-        if self.embedder.backend == "hash":
+        if self.use_hash_backend:
             results = self.collection.get(
                 include=["documents", "metadatas"],
                 where=where_clause,

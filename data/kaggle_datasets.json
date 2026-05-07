@@ -1,5 +1,8 @@
 [
   {
+    "note": "Populate kaggle_slug values before running downloads."
+  },
+  {
     "name": "Livecareer Resume Dataset",
     "kaggle_slug": ""
   },

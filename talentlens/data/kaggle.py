@@ -24,6 +24,7 @@ def _load_dataset_config(config_path: Path) -> list[KaggleDataset]:
     return [
         KaggleDataset(name=item["name"], kaggle_slug=item.get("kaggle_slug", ""))
         for item in payload
+        if "name" in item
     ]
 
 
@@ -37,7 +38,7 @@ def download_dataset(dataset: KaggleDataset, target_dir: Path) -> Path:
     kaggle_api.dataset_download_files(
         dataset.kaggle_slug,
         path=str(target_dir),
-        unzip=False,
+        unzip=True,
         quiet=False,
     )
     metadata = {

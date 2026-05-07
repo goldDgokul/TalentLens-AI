@@ -58,7 +58,8 @@ class LLMClient:
             ],
             temperature=0.2,
         )
-        return response.choices[0].message.content.strip()
+        content = response.choices[0].message.content or ""
+        return content.strip()
 
     def _mock_extract(self, resume_text: str) -> dict[str, Any]:
         lines = [line.strip() for line in resume_text.splitlines() if line.strip()]
