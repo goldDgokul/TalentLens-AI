@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import zlib
-from typing import Iterable
-
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
@@ -22,7 +20,7 @@ class Embedder:
         else:
             raise ValueError(f"Unsupported embedding backend: {self.backend}")
 
-    def embed(self, texts: Iterable[str]) -> list[list[float]]:
+    def embed(self, texts: list[str]) -> list[list[float]]:
         if self.backend == "sentence-transformers":
             assert self._model is not None
             embeddings = self._model.encode(list(texts), normalize_embeddings=True)

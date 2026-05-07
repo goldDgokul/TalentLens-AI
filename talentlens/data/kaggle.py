@@ -4,7 +4,6 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable
 
 from kaggle import api as kaggle_api
 
@@ -50,7 +49,7 @@ def download_dataset(dataset: KaggleDataset, target_dir: Path) -> Path:
     return target_dir
 
 
-def download_all(datasets: Iterable[KaggleDataset] | None = None) -> list[Path]:
+def download_all(datasets: list[KaggleDataset] | None = None) -> list[Path]:
     settings = get_settings()
     config_path = settings.data_dir / "kaggle_datasets.json"
     datasets = list(datasets or _load_dataset_config(config_path))

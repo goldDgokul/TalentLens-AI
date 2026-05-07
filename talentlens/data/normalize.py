@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
-from typing import Iterable
 
 import pandas as pd
 
@@ -36,7 +35,7 @@ JD_TEXT_COLUMNS = [
 JD_TITLE_COLUMNS = ["title", "job_title", "Job Title", "position_title"]
 
 
-def _find_column(columns: Iterable[str], candidates: list[str]) -> str | None:
+def _find_column(columns: list[str], candidates: list[str]) -> str | None:
     lowered = {col.lower(): col for col in columns}
     for candidate in candidates:
         if candidate.lower() in lowered:
