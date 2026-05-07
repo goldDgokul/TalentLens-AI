@@ -44,6 +44,7 @@ def _find_column(columns: list[str], candidates: list[str]) -> str | None:
 
 
 def _column_attr(column: str) -> str:
+    # Normalize column names into valid Python attribute identifiers for itertuples.
     return re.sub(r"\W|^(?=\d)", "_", column)
 
 
