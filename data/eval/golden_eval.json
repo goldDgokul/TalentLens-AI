@@ -1,0 +1,272 @@
+[
+  {
+    "id": "A001",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What is the candidate's name?",
+    "reference_answer": "Alex Johnson",
+    "expected_source_span": "Header > Name line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A002",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What is the candidate's current title and company?",
+    "reference_answer": "Senior Data Scientist at BlueWave Analytics",
+    "expected_source_span": "Experience > BlueWave Analytics heading",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A003",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "When did the candidate start at BlueWave Analytics?",
+    "reference_answer": "January 2021",
+    "expected_source_span": "Experience > BlueWave Analytics (Jan 2021 – Present)",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A004",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "By how much did the churn prediction model reduce customer attrition?",
+    "reference_answer": "18%",
+    "expected_source_span": "Experience > BlueWave Analytics > bullet 1",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A005",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which model was used for the churn prediction work?",
+    "reference_answer": "XGBoost",
+    "expected_source_span": "Experience > BlueWave Analytics > bullet 1",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A006",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What interpretability technique is cited in the churn project?",
+    "reference_answer": "SHAP",
+    "expected_source_span": "Experience > BlueWave Analytics > bullet 1",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A007",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What technology was used for the real-time anomaly detection pipeline?",
+    "reference_answer": "Spark Streaming",
+    "expected_source_span": "Experience > BlueWave Analytics > bullet 2",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A008",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What domain did the anomaly detection pipeline focus on?",
+    "reference_answer": "Payment risk",
+    "expected_source_span": "Experience > BlueWave Analytics > bullet 2",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A009",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which model type powered the feedback classifier?",
+    "reference_answer": "BERT",
+    "expected_source_span": "Experience > BlueWave Analytics > bullet 3",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A010",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What F1 score is reported for the NLP feedback classifier?",
+    "reference_answer": "0.89 F1",
+    "expected_source_span": "Experience > BlueWave Analytics > bullet 3",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A011",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What company did the candidate work for before BlueWave Analytics?",
+    "reference_answer": "Pixel Labs",
+    "expected_source_span": "Experience > Pixel Labs heading",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A012",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What were the dates of employment at Pixel Labs?",
+    "reference_answer": "Jun 2018 – Dec 2020",
+    "expected_source_span": "Experience > Pixel Labs (Jun 2018 – Dec 2020)",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A013",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "By how much did onboarding activation improve at Pixel Labs?",
+    "reference_answer": "12%",
+    "expected_source_span": "Experience > Pixel Labs > bullet 1",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A014",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which AWS services were used for the feature store?",
+    "reference_answer": "S3 and Glue",
+    "expected_source_span": "Experience > Pixel Labs > bullet 2",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A015",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "By how much did the feature store reduce training time?",
+    "reference_answer": "30%",
+    "expected_source_span": "Experience > Pixel Labs > bullet 2",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A016",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which visualization tool was used for executive dashboards?",
+    "reference_answer": "Tableau",
+    "expected_source_span": "Experience > Pixel Labs > bullet 3",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A017",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What is the name of the ticket-routing project?",
+    "reference_answer": "SmartSupport",
+    "expected_source_span": "Projects > SmartSupport",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A018",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What impact did the SmartSupport project have on response time?",
+    "reference_answer": "Reduced response time by 22%",
+    "expected_source_span": "Projects > SmartSupport line",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A019",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which model type was used for retail demand forecasting?",
+    "reference_answer": "LSTM",
+    "expected_source_span": "Projects > Retail Demand Forecasting line",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A020",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "What MAPE value is reported for the demand forecasting project?",
+    "reference_answer": "8.5%",
+    "expected_source_span": "Projects > Retail Demand Forecasting line",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A021",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Where did the candidate earn their M.S. in Data Science?",
+    "reference_answer": "University of Texas at Austin",
+    "expected_source_span": "Education > M.S. Data Science line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A022",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "In what year did the candidate complete the M.S. in Data Science?",
+    "reference_answer": "2018",
+    "expected_source_span": "Education > M.S. Data Science line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A023",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Where did the candidate earn their B.S. in Computer Science?",
+    "reference_answer": "Texas A&M University",
+    "expected_source_span": "Education > B.S. Computer Science line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A024",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "In what year did the candidate complete the B.S. in Computer Science?",
+    "reference_answer": "2016",
+    "expected_source_span": "Education > B.S. Computer Science line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A025",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which certification is listed on the resume?",
+    "reference_answer": "AWS Certified Machine Learning – Specialty",
+    "expected_source_span": "Certifications line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A026",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "In what year was the AWS certification earned?",
+    "reference_answer": "2022",
+    "expected_source_span": "Certifications line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A027",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which city is listed as the candidate's location?",
+    "reference_answer": "Austin, TX",
+    "expected_source_span": "Header > Contact line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A028",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "How many years of experience does the candidate claim?",
+    "reference_answer": "6 years",
+    "expected_source_span": "Summary line",
+    "difficulty": "easy"
+  },
+  {
+    "id": "A029",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Which focus areas are highlighted in the summary?",
+    "reference_answer": "Churn prediction, NLP, and real-time analytics",
+    "expected_source_span": "Summary line",
+    "difficulty": "medium"
+  },
+  {
+    "id": "A030",
+    "type": "factual_retrieval",
+    "resume_id": "res_sample_0001",
+    "question": "Name three core skills listed on the resume.",
+    "reference_answer": "Python, SQL, Spark",
+    "expected_source_span": "Skills line",
+    "difficulty": "easy"
+  }
+]
