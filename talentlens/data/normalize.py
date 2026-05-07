@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 from typing import Iterable
 
 import pandas as pd
@@ -43,6 +44,10 @@ def _find_column(columns: Iterable[str], candidates: list[str]) -> str | None:
     return None
 
 
+def _column_attr(column: str) -> str:
+    return re.sub(r"\W|^(?=\d)", "_", column)
+
+
 def _matches_role_family(text: str, role_family: str) -> bool:
     keywords = ROLE_FAMILY_KEYWORDS.get(role_family, [])
     text_lower = text.lower()
@@ -70,17 +75,14 @@ def normalize_resumes(raw_dir: Path | None = None, output_dir: Path | None = Non
         if not text_column:
             continue
         category_column = _find_column(frame.columns, RESUME_CATEGORY_COLUMNS)
-        columns = list(frame.columns)
-        text_idx = columns.index(text_column)
-        category_idx = columns.index(category_column) if category_column else None
-        for row in frame.itertuples(index=True, name=None):
-            row_index = row[0]
-            text = str(row[text_idx + 1]).strip()
+        text_attr = _column_attr(text_column)
+        category_attr = _column_attr(category_column) if category_column else None
+        for row in frame.itertuples(index=True, name="ResumeRow"):
+            row_index = row.Index
+            text = str(getattr(row, text_attr, "")).strip()
             if not text:
                 continue
-            category = (
-                str(row[category_idx + 1]).strip() if category_idx is not None else ""
-            )
+            category = str(getattr(row, category_attr, "")).strip() if category_attr else ""
             if category and not _matches_role_family(category, settings.role_family):
                 if not _matches_role_family(text, settings.role_family):
                     continue
@@ -130,15 +132,14 @@ def normalize_job_descriptions(
         title_column = _find_column(frame.columns, JD_TITLE_COLUMNS)
         if not text_column:
             continue
-        columns = list(frame.columns)
-        text_idx = columns.index(text_column)
-        title_idx = columns.index(title_column) if title_column else None
-        for row in frame.itertuples(index=True, name=None):
-            row_index = row[0]
-            text = str(row[text_idx + 1]).strip()
+        text_attr = _column_attr(text_column)
+        title_attr = _column_attr(title_column) if title_column else None
+        for row in frame.itertuples(index=True, name="JDRow"):
+            row_index = row.Index
+            text = str(getattr(row, text_attr, "")).strip()
             if not text:
                 continue
-            title = str(row[title_idx + 1]).strip() if title_idx is not None else ""
+            title = str(getattr(row, title_attr, "")).strip() if title_attr else ""
             combined = f"{title} {text}"
             if not _matches_role_family(combined, settings.role_family):
                 continue

@@ -35,6 +35,6 @@ class Embedder:
             index = zlib.crc32(token.encode("utf-8")) % dims
             vector[index] += 1.0
         norm = np.linalg.norm(vector)
-        if norm:
+        if norm > 0:
             vector = vector / norm
         return vector.tolist()

@@ -51,10 +51,10 @@ async def upload_resume(file: UploadFile = File(...)) -> dict[str, str | int]:
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest) -> ChatResponse:
-    load_resume(request.resume_id)
+    resume_record = load_resume(request.resume_id)
     retriever = ResumeRetriever()
     chunks = retriever.retrieve(
-        request.question, top_k=request.top_k, resume_id=request.resume_id
+        request.question, top_k=request.top_k, resume_id=resume_record["id"]
     )
     log_retrieval(request.question, chunks)
     payload = answer_with_citations(request.question, chunks)

@@ -43,14 +43,17 @@ def chunk_resume_text(resume_text: str, max_chars: int = 800) -> list[Chunk]:
     chunk_index = 0
     for section, content_lines in sections.items():
         buffer: list[str] = []
+        buffer_len = 0
         for line in content_lines:
-            if sum(len(item) for item in buffer) + len(line) > max_chars:
+            if buffer_len + len(line) > max_chars:
                 text = "\n".join(buffer).strip()
                 if text:
                     chunks.append(Chunk(text=text, section=section, index=chunk_index))
                     chunk_index += 1
                 buffer = []
+                buffer_len = 0
             buffer.append(line)
+            buffer_len += len(line)
         text = "\n".join(buffer).strip()
         if text:
             chunks.append(Chunk(text=text, section=section, index=chunk_index))
