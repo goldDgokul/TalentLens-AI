@@ -1,0 +1,24 @@
+week1
+How to Run - TalentLens-AI Week 1 setup guide.
+
+1) Create and activate a Python virtual environment.
+   - python -m venv .venv
+   - Linux/macOS: source .venv/bin/activate
+   - Windows (cmd): .venv\Scripts\activate
+   - Windows (PowerShell): .venv\Scripts\Activate.ps1
+2) Install project dependencies.
+   - pip install -r requirements.txt
+3) Configure Kaggle access.
+   - export KAGGLE_USERNAME=your_username
+   - export KAGGLE_KEY=your_key
+   - or place kaggle.json in ~/.kaggle/
+   - Update data/kaggle_datasets.json with Kaggle slugs in the form owner/dataset-name
+   - example: kaggle.com/owner/dataset-name -> owner/dataset-name
+4) Download and normalize datasets.
+   - python -m talentlens.data.kaggle
+   - python -m talentlens.data.normalize
+   - python -m talentlens.data.policies
+5) Build the resume-only index.
+   - python -m talentlens.rag.index
+6) Run the API server.
+   - uvicorn main:app --reload
