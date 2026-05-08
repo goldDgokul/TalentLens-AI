@@ -1,16 +1,18 @@
 week1
-Week 1 quick start guide for running TalentLens-AI.
+HowtoRun - TalentLens-AI Week 1 setup guide.
 
 1) Create and activate a Python virtual environment.
    - python -m venv .venv
-   - source .venv/bin/activate
+   - Linux/macOS: source .venv/bin/activate
+   - Windows (cmd): .venv\Scripts\activate
+   - Windows (PowerShell): .venv\Scripts\Activate.ps1
 2) Install project dependencies.
    - pip install -r requirements.txt
 3) Configure Kaggle access.
    - export KAGGLE_USERNAME=your_username
    - export KAGGLE_KEY=your_key
    - or place kaggle.json in ~/.kaggle/
-   - update data/kaggle_datasets.json with Kaggle slugs in the form owner/dataset-name from each dataset URL
+   - update data/kaggle_datasets.json with Kaggle slugs in the form owner/dataset-name (example: kaggle.com/owner/dataset-name -> owner/dataset-name)
 4) Download and normalize datasets.
    - python -m talentlens.data.kaggle
    - python -m talentlens.data.normalize
