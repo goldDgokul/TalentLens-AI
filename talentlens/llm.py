@@ -14,16 +14,18 @@ class LLMClient:
         self.settings = get_settings()
         self.provider = self.settings.llm_provider.lower()
         if self.provider == "openai":
-            if not os.getenv("OPENAI_API_KEY"):
-                raise EnvironmentError("OPENAI_API_KEY is required for OpenAI provider.")
-            self.client = OpenAI()
-        elif self.provider == "mock":
+            if os.getenv("OPENAI_API_KEY"):
+                self.client = OpenAI()
+            else:
+                self.provider = "none"
+                self.client = None
+        elif self.provider in {"mock", "none"}:
             self.client = None
         else:
             raise ValueError(f"Unsupported LLM provider: {self.provider}")
 
     def extract_resume(self, resume_text: str) -> dict[str, Any]:
-        if self.provider == "mock":
+        if self.provider in {"mock", "none"}:
             return self._mock_extract(resume_text)
         system_prompt = (
             "You are a strict information extractor. Return only JSON with the fields: "
@@ -43,7 +45,7 @@ class LLMClient:
         return json.loads(content)
 
     def answer_question(self, question: str, context: str) -> str:
-        if self.provider == "mock":
+        if self.provider in {"mock", "none"}:
             return context
         system_prompt = (
             "Answer the question using only the provided context. "

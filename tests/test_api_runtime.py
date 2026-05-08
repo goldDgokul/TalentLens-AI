@@ -1,0 +1,78 @@
+from __future__ import annotations
+
+import os
+import tempfile
+import unittest
+
+from fastapi.testclient import TestClient
+
+from talentlens.api import app
+
+
+class APIRuntimeTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self._temp_dir = tempfile.TemporaryDirectory()
+        self._original_env = os.environ.copy()
+        os.environ["TALENTLENS_DATA_DIR"] = self._temp_dir.name
+        os.environ["EMBEDDING_BACKEND"] = "hash"
+        os.environ["LLM_PROVIDER"] = "openai"
+        os.environ.pop("OPENAI_API_KEY", None)
+        self.client = TestClient(app)
+
+    def tearDown(self) -> None:
+        os.environ.clear()
+        os.environ.update(self._original_env)
+        self._temp_dir.cleanup()
+
+    def test_health_endpoint(self) -> None:
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "ok"})
+
+    def test_upload_resume_works_without_openai_key(self) -> None:
+        payload = b"Alex Johnson\nSkills: Python, SQL\nExperience:\nBuilt analytics pipelines."
+        response = self.client.post(
+            "/upload_resume",
+            files={"file": ("resume.txt", payload, "text/plain")},
+        )
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertIn("resume_id", body)
+        self.assertIn("chunks_indexed", body)
+        self.assertIsInstance(body["chunks_indexed"], int)
+
+    def test_chat_missing_resume_id_returns_404(self) -> None:
+        response = self.client.post(
+            "/chat",
+            json={"resume_id": "string", "question": "What skills are listed?", "top_k": 2},
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertIn("not found", response.json()["detail"].lower())
+
+    def test_chat_works_for_existing_resume_id(self) -> None:
+        upload_response = self.client.post(
+            "/upload_resume",
+            files={
+                "file": (
+                    "resume.txt",
+                    b"Alex Johnson\nSkills: Python, SQL\nExperience:\nData Engineer at Example Corp",
+                    "text/plain",
+                )
+            },
+        )
+        self.assertEqual(upload_response.status_code, 200)
+        resume_id = upload_response.json()["resume_id"]
+
+        chat_response = self.client.post(
+            "/chat",
+            json={"resume_id": resume_id, "question": "What skills are listed?", "top_k": 2},
+        )
+        self.assertEqual(chat_response.status_code, 200)
+        payload = chat_response.json()
+        self.assertIn("answer", payload)
+        self.assertIn("citations", payload)
+        self.assertIsInstance(payload["citations"], list)
+
+
+if __name__ == "__main__":
+    unittest.main()

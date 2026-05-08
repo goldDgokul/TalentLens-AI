@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from pathlib import Path
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
 from talentlens.extraction import extract_structured_resume
@@ -19,7 +19,12 @@ app = FastAPI(title="TalentLens AI", version="0.1.0")
 
 
 class ChatRequest(BaseModel):
-    resume_id: str = Field(..., description="Resume ID returned from upload.")
+    resume_id: str = Field(
+        ...,
+        min_length=1,
+        pattern=r"^[A-Za-z0-9_-]+$",
+        description="Resume ID returned from upload.",
+    )
     question: str
     top_k: int = 4
 
@@ -51,7 +56,16 @@ async def upload_resume(file: UploadFile = File(...)) -> dict[str, str | int]:
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest) -> ChatResponse:
-    resume_record = load_resume(request.resume_id)
+    try:
+        resume_record = load_resume(request.resume_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"Resume '{request.resume_id}' not found. "
+                "Upload a resume first and use the returned resume_id."
+            ),
+        ) from exc
     retriever = ResumeRetriever()
     chunks = retriever.retrieve(
         request.question, top_k=request.top_k, resume_id=resume_record["id"]
