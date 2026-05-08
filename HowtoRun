@@ -1,0 +1,17 @@
+week1
+1) Create and activate a Python virtual environment.
+   - python -m venv .venv
+   - source .venv/bin/activate
+2) Install project dependencies.
+   - pip install -r requirements.txt
+3) Configure Kaggle access.
+   - Set KAGGLE_USERNAME and KAGGLE_KEY, or place kaggle.json in ~/.kaggle/
+   - Update data/kaggle_datasets.json with correct dataset slugs
+4) Download and normalize datasets.
+   - python -m talentlens.data.kaggle
+   - python -m talentlens.data.normalize
+   - python -m talentlens.data.policies
+5) Build the resume-only index.
+   - python -m talentlens.rag.index
+6) Run the API server.
+   - uvicorn main:app --reload
