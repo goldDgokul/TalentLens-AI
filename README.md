@@ -33,6 +33,12 @@ python -m talentlens.rag.index
 uvicorn main:app --reload
 ```
 
+### Environment variables
+- `OPENAI_API_KEY` (optional): only needed when `LLM_PROVIDER=openai` and you want OpenAI-backed extraction/answers.
+- `LLM_PROVIDER` (optional, default: `openai`): supports `openai`, `mock`, and `none`.
+  - If `LLM_PROVIDER=openai` but `OPENAI_API_KEY` is not set, the app gracefully falls back to heuristic extraction/answers.
+- `EMBEDDING_BACKEND` (optional, default: `sentence-transformers`): set to `hash` for lightweight local/demo runs.
+
 ### 6) Demo (sample resume)
 Use the provided sample resume to verify Week 1 functionality without API keys:
 ```bash
@@ -41,7 +47,12 @@ export EMBEDDING_BACKEND=hash
 python -m talentlens.rag.index
 ```
 
-Upload `data/samples/resume_alex_johnson.txt` via `/upload_resume`, then query `/chat` with factual questions. Citations are included in every response.
+Usage flow:
+1. Upload a resume file via `/upload_resume`.
+2. Read the returned `resume_id`.
+3. Use that exact `resume_id` in `/chat` requests.
+
+If an unknown `resume_id` is sent to `/chat`, the API returns `404` with a clear error message.
 
 ## Data Layout
 ```
