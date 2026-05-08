@@ -12,7 +12,8 @@ HowtoRun - TalentLens-AI Week 1 setup guide.
    - export KAGGLE_USERNAME=your_username
    - export KAGGLE_KEY=your_key
    - or place kaggle.json in ~/.kaggle/
-   - update data/kaggle_datasets.json with Kaggle slugs in the form owner/dataset-name (example: kaggle.com/owner/dataset-name -> owner/dataset-name)
+   - update data/kaggle_datasets.json with Kaggle slugs in the form owner/dataset-name
+   - example: kaggle.com/owner/dataset-name -> owner/dataset-name
 4) Download and normalize datasets.
    - python -m talentlens.data.kaggle
    - python -m talentlens.data.normalize
