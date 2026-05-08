@@ -19,9 +19,9 @@ How to Run - TalentLens-AI Week 1 setup guide.
    - python -m talentlens.data.normalize
    - python -m talentlens.data.policies
 5) Build the resume-only index.
-    - python -m talentlens.rag.index
+   - python -m talentlens.rag.index
 6) Run the API server.
-    - uvicorn main:app --reload
+   - uvicorn main:app --reload
 7) Optional runtime environment variables.
    - LLM_PROVIDER (default: openai) supports: openai, mock, none
    - OPENAI_API_KEY is optional; when absent with LLM_PROVIDER=openai, TalentLens-AI falls back to heuristic behavior

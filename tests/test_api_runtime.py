@@ -41,10 +41,38 @@ class APIRuntimeTests(unittest.TestCase):
         self.assertIn("chunks_indexed", body)
         self.assertIsInstance(body["chunks_indexed"], int)
 
-    def test_chat_missing_resume_id_returns_404(self) -> None:
+    def test_chat_nonexistent_resume_id_returns_404(self) -> None:
         response = self.client.post(
             "/chat",
-            json={"resume_id": "string", "question": "What skills are listed?", "top_k": 2},
+            json={
+                "resume_id": "fake_resume_id",
+                "question": "What skills are listed?",
+                "top_k": 2,
+            },
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertIn("not found", response.json()["detail"].lower())
+
+    def test_chat_malformed_resume_id_returns_422(self) -> None:
+        response = self.client.post(
+            "/chat",
+            json={
+                "resume_id": "../bad",
+                "question": "What skills are listed?",
+                "top_k": 2,
+            },
+        )
+        self.assertEqual(response.status_code, 422)
+        self.assertIn("string_pattern_mismatch", response.text)
+
+    def test_chat_nonexistent_generated_style_resume_id_returns_404(self) -> None:
+        response = self.client.post(
+            "/chat",
+            json={
+                "resume_id": "res_upload_abcdef12",
+                "question": "What skills are listed?",
+                "top_k": 2,
+            },
         )
         self.assertEqual(response.status_code, 404)
         self.assertIn("not found", response.json()["detail"].lower())

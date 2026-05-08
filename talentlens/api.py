@@ -16,13 +16,14 @@ from talentlens.storage import ensure_data_dirs, load_resume, save_processed_res
 
 
 app = FastAPI(title="TalentLens AI", version="0.1.0")
+RESUME_ID_PATTERN = r"^[A-Za-z0-9_-]+$"
 
 
 class ChatRequest(BaseModel):
     resume_id: str = Field(
         ...,
         min_length=1,
-        pattern=r"^[A-Za-z0-9_-]+$",
+        pattern=RESUME_ID_PATTERN,
         description="Resume ID returned from upload.",
     )
     question: str
