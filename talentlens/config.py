@@ -38,7 +38,12 @@ class Settings:
 
 def get_settings() -> Settings:
     data_dir = Path(os.getenv("TALENTLENS_DATA_DIR", "data")).resolve()
-    llm_model = os.getenv("OLLAMA_MODEL") or os.getenv("LLM_MODEL", "llama3")
+    ollama_model = os.getenv("OLLAMA_MODEL")
+    llm_model = (
+        ollama_model
+        if ollama_model is not None
+        else os.getenv("LLM_MODEL", "llama3")
+    )
     return Settings(
         data_dir=data_dir,
         role_family=os.getenv("ROLE_FAMILY", "data-ml"),
