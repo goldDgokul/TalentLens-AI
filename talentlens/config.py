@@ -46,7 +46,7 @@ def get_settings() -> Settings:
         ),
         embedding_backend=os.getenv("EMBEDDING_BACKEND", "sentence-transformers"),
         llm_provider=os.getenv("LLM_PROVIDER", "ollama"),
-        llm_model=os.getenv("OLLAMA_MODEL", "llama3"),
+        llm_model=os.getenv("OLLAMA_MODEL", os.getenv("LLM_MODEL", "llama3")),
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
     )
 

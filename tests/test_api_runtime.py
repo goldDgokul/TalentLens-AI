@@ -3,8 +3,10 @@ from __future__ import annotations
 import os
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+import requests
 
 from talentlens.api import app
 
@@ -42,12 +44,12 @@ class APIRuntimeTests(unittest.TestCase):
 
     def test_upload_resume_returns_503_when_ollama_unreachable(self) -> None:
         os.environ["LLM_PROVIDER"] = "ollama"
-        os.environ["OLLAMA_BASE_URL"] = "http://127.0.0.1:9"
         payload = b"Alex Johnson\nSkills: Python, SQL"
-        response = self.client.post(
-            "/upload_resume",
-            files={"file": ("resume.txt", payload, "text/plain")},
-        )
+        with patch("talentlens.llm.requests.post", side_effect=requests.RequestException):
+            response = self.client.post(
+                "/upload_resume",
+                files={"file": ("resume.txt", payload, "text/plain")},
+            )
         self.assertEqual(response.status_code, 503)
         self.assertIn("ollama", response.json()["detail"].lower())
 
