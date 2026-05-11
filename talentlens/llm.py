@@ -11,8 +11,6 @@ from talentlens.config import get_settings
 class OllamaUnavailableError(RuntimeError):
     """Raised when Ollama HTTP requests fail or the Ollama service is unreachable."""
 
-    pass
-
 
 class LLMClient:
     def __init__(self) -> None:
