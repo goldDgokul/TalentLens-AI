@@ -10,6 +10,17 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### 1.1) Install Ollama and pull llama3
+1. Install Ollama from https://ollama.com/download
+2. Start Ollama:
+   ```bash
+   ollama serve
+   ```
+3. Pull the default model:
+   ```bash
+   ollama pull llama3
+   ```
+
 ### 2) Configure Kaggle datasets
 1. Add Kaggle API credentials:
    - Export `KAGGLE_USERNAME` and `KAGGLE_KEY`, or
@@ -30,19 +41,23 @@ python -m talentlens.rag.index
 
 ### 5) Run the API
 ```bash
+ollama serve
+ollama pull llama3
 uvicorn main:app --reload
 ```
 
 ### Environment variables
-- `OPENAI_API_KEY` (optional): only needed when `LLM_PROVIDER=openai` and you want OpenAI-backed extraction/answers.
-- `LLM_PROVIDER` (optional, default: `openai`): supports `openai`, `mock`, and `none`.
-  - If `LLM_PROVIDER=openai` but `OPENAI_API_KEY` is not set, the app gracefully falls back to heuristic extraction/answers.
+- `LLM_PROVIDER` (optional, default: `ollama`): supports `ollama`, `mock`, and `none`.
+- `OLLAMA_BASE_URL` (optional, default: `http://localhost:11434`)
+- `OLLAMA_MODEL` (optional, default: `llama3`)
 - `EMBEDDING_BACKEND` (optional, default: `sentence-transformers`): set to `hash` for lightweight local/demo runs.
 
 ### 6) Demo (sample resume)
-Use the provided sample resume to verify Week 1 functionality without API keys:
+Use the provided sample resume to verify Week 1 functionality with local Ollama:
 ```bash
-export LLM_PROVIDER=mock
+export LLM_PROVIDER=ollama
+export OLLAMA_BASE_URL=http://localhost:11434
+export OLLAMA_MODEL=llama3
 export EMBEDDING_BACKEND=hash
 python -m talentlens.rag.index
 ```

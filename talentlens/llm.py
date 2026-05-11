@@ -1,67 +1,94 @@
 from __future__ import annotations
 
 import json
-import os
 from typing import Any
 
-from openai import OpenAI
+import requests
 
 from talentlens.config import get_settings
+
+
+class OllamaUnavailableError(RuntimeError):
+    pass
 
 
 class LLMClient:
     def __init__(self) -> None:
         self.settings = get_settings()
         self.provider = self.settings.llm_provider.lower()
-        if self.provider == "openai":
-            if os.getenv("OPENAI_API_KEY"):
-                self.client = OpenAI()
-            else:
-                self.provider = "none"
-                self.client = None
+        if self.provider == "ollama":
+            self.base_url = self.settings.ollama_base_url.rstrip("/")
         elif self.provider in {"mock", "none"}:
-            self.client = None
+            self.base_url = ""
         else:
             raise ValueError(f"Unsupported LLM provider: {self.provider}")
 
     def extract_resume(self, resume_text: str) -> dict[str, Any]:
         if self.provider in {"mock", "none"}:
             return self._mock_extract(resume_text)
-        system_prompt = (
-            "You are a strict information extractor. Return only JSON with the fields: "
-            "name, contact, summary, experience, skills, education, projects."
+        prompt = (
+            "Extract structured resume data from the text below and return only valid JSON "
+            "with fields: name, contact, summary, experience, skills, education, projects.\n\n"
+            f"{resume_text}"
         )
-        user_prompt = f"Extract structured resume data from the text below:\n\n{resume_text}"
-        response = self.client.chat.completions.create(
-            model=self.settings.llm_model,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            response_format={"type": "json_object"},
-            temperature=0,
+        data = self._ollama_request(
+            "/api/generate",
+            {
+                "model": self.settings.llm_model,
+                "prompt": prompt,
+                "format": "json",
+                "stream": False,
+                "options": {"temperature": 0},
+            },
         )
-        content = response.choices[0].message.content or "{}"
-        return json.loads(content)
+        content = data.get("response", "{}")
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError:
+            return self._mock_extract(resume_text)
 
     def answer_question(self, question: str, context: str) -> str:
         if self.provider in {"mock", "none"}:
             return context
-        system_prompt = (
-            "Answer the question using only the provided context. "
-            "Cite sources in brackets like [res_0001:chunk_2]."
+        data = self._ollama_request(
+            "/api/chat",
+            {
+                "model": self.settings.llm_model,
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": (
+                            "Answer the question using only the provided context. "
+                            "Cite sources in brackets like [res_0001:chunk_2]."
+                        ),
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Question: {question}\n\nContext:\n{context}",
+                    },
+                ],
+                "stream": False,
+                "options": {"temperature": 0.2},
+            },
         )
-        user_prompt = f"Question: {question}\n\nContext:\n{context}"
-        response = self.client.chat.completions.create(
-            model=self.settings.llm_model,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            temperature=0.2,
-        )
-        content = response.choices[0].message.content or ""
-        return content.strip()
+        message = data.get("message", {})
+        content = message.get("content", "")
+        return str(content).strip()
+
+    def _ollama_request(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+        try:
+            response = requests.post(
+                f"{self.base_url}{path}",
+                json=payload,
+                timeout=30,
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as exc:
+            raise OllamaUnavailableError(
+                "Failed to reach Ollama. Ensure Ollama is running and accessible at "
+                f"{self.base_url}."
+            ) from exc
 
     def _mock_extract(self, resume_text: str) -> dict[str, Any]:
         lines = [line.strip() for line in resume_text.splitlines() if line.strip()]

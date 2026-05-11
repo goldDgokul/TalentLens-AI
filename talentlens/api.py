@@ -7,6 +7,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
 from talentlens.extraction import extract_structured_resume
+from talentlens.llm import OllamaUnavailableError
 from talentlens.parsing import parse_resume_file
 from talentlens.rag.answer import answer_with_citations
 from talentlens.rag.logging import log_retrieval
@@ -48,7 +49,16 @@ async def upload_resume(file: UploadFile = File(...)) -> dict[str, str | int]:
     filename = file.filename or f"{resume_id}.txt"
     raw_path = save_raw_resume(resume_id, filename, content)
     resume_text = parse_resume_file(Path(raw_path))
-    structured = extract_structured_resume(resume_text)
+    try:
+        structured = extract_structured_resume(resume_text)
+    except OllamaUnavailableError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Ollama is not reachable. Start Ollama and verify OLLAMA_BASE_URL "
+                "before calling /upload_resume."
+            ),
+        ) from exc
     save_processed_resume(resume_id, resume_text, structured, Path(raw_path))
     indexer = ResumeIndex()
     chunk_count = indexer.index_resume(resume_id, resume_text)
