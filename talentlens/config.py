@@ -13,6 +13,7 @@ class Settings:
     embedding_backend: str
     llm_provider: str
     llm_model: str
+    ollama_base_url: str
 
     @property
     def raw_dir(self) -> Path:
@@ -37,6 +38,12 @@ class Settings:
 
 def get_settings() -> Settings:
     data_dir = Path(os.getenv("TALENTLENS_DATA_DIR", "data")).resolve()
+    ollama_model = os.getenv("OLLAMA_MODEL")
+    llm_model = (
+        ollama_model
+        if ollama_model is not None
+        else os.getenv("LLM_MODEL", "llama3")
+    )
     return Settings(
         data_dir=data_dir,
         role_family=os.getenv("ROLE_FAMILY", "data-ml"),
@@ -44,8 +51,9 @@ def get_settings() -> Settings:
             "EMBEDDING_MODEL", "sentence-transformers/bge-small-en-v1.5"
         ),
         embedding_backend=os.getenv("EMBEDDING_BACKEND", "sentence-transformers"),
-        llm_provider=os.getenv("LLM_PROVIDER", "openai"),
-        llm_model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
+        llm_provider=os.getenv("LLM_PROVIDER", "ollama"),
+        llm_model=llm_model,
+        ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
     )
 
 
