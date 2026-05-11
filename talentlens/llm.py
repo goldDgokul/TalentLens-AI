@@ -46,8 +46,10 @@ class LLMClient:
         content = data.get("response", "{}")
         try:
             return json.loads(content)
-        except json.JSONDecodeError:
-            return self._mock_extract(resume_text)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                "Ollama returned malformed JSON for resume extraction."
+            ) from exc
 
     def answer_question(self, question: str, context: str) -> str:
         if self.provider in {"mock", "none"}:

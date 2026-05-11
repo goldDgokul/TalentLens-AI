@@ -41,8 +41,8 @@ python -m talentlens.rag.index
 
 ### 5) Run the API
 ```bash
-ollama serve
-ollama pull llama3
+# Ensure `ollama serve` is running in another terminal (or as a service).
+# `ollama pull llama3` is only needed once per machine.
 uvicorn main:app --reload
 ```
 

@@ -38,6 +38,7 @@ class Settings:
 
 def get_settings() -> Settings:
     data_dir = Path(os.getenv("TALENTLENS_DATA_DIR", "data")).resolve()
+    llm_model = os.getenv("OLLAMA_MODEL") or os.getenv("LLM_MODEL", "llama3")
     return Settings(
         data_dir=data_dir,
         role_family=os.getenv("ROLE_FAMILY", "data-ml"),
@@ -46,7 +47,7 @@ def get_settings() -> Settings:
         ),
         embedding_backend=os.getenv("EMBEDDING_BACKEND", "sentence-transformers"),
         llm_provider=os.getenv("LLM_PROVIDER", "ollama"),
-        llm_model=os.getenv("OLLAMA_MODEL", os.getenv("LLM_MODEL", "llama3")),
+        llm_model=llm_model,
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
     )
 
