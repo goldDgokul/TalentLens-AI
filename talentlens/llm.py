@@ -90,8 +90,8 @@ class LLMClient:
             return response.json()
         except requests.RequestException as exc:
             raise OllamaUnavailableError(
-                "Failed to reach Ollama. Ensure Ollama is running and accessible at "
-                f"{self.base_url}."
+                "Failed to reach Ollama. Ensure Ollama is running and accessible. "
+                f"Base URL: {self.base_url}"
             ) from exc
 
     def _mock_extract(self, resume_text: str) -> dict[str, Any]:

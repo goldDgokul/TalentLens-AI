@@ -55,7 +55,7 @@ async def upload_resume(file: UploadFile = File(...)) -> dict[str, str | int]:
         raise HTTPException(
             status_code=503,
             detail=(
-                "Ollama is not reachable. Start Ollama and verify OLLAMA_BASE_URL "
+                f"Ollama is not reachable. {exc} Start Ollama and verify OLLAMA_BASE_URL "
                 "before calling /upload_resume."
             ),
         ) from exc

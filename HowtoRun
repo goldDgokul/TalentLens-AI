@@ -30,6 +30,7 @@ How to Run - TalentLens-AI Week 1 setup guide.
    - LLM_PROVIDER (default: ollama) supports: ollama, mock, none
    - OLLAMA_BASE_URL (default: http://localhost:11434)
    - OLLAMA_MODEL (default: llama3)
+   - LLM_MODEL is a legacy fallback if OLLAMA_MODEL is not set
    - EMBEDDING_BACKEND=hash can be used for lightweight local runs
 9) API usage flow.
    - First call /upload_resume and capture the returned resume_id

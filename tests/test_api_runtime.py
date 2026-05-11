@@ -44,6 +44,7 @@ class APIRuntimeTests(unittest.TestCase):
 
     def test_upload_resume_returns_503_when_ollama_unreachable(self) -> None:
         os.environ["LLM_PROVIDER"] = "ollama"
+        os.environ["OLLAMA_BASE_URL"] = "http://localhost:11434"
         payload = b"Alex Johnson\nSkills: Python, SQL"
         with patch("talentlens.llm.requests.post", side_effect=requests.RequestException):
             response = self.client.post(
@@ -52,6 +53,7 @@ class APIRuntimeTests(unittest.TestCase):
             )
         self.assertEqual(response.status_code, 503)
         self.assertIn("ollama", response.json()["detail"].lower())
+        self.assertIn("http://localhost:11434", response.json()["detail"])
 
     def test_chat_nonexistent_resume_id_returns_404(self) -> None:
         response = self.client.post(

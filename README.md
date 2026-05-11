@@ -50,6 +50,7 @@ uvicorn main:app --reload
 - `LLM_PROVIDER` (optional, default: `ollama`): supports `ollama`, `mock`, and `none`.
 - `OLLAMA_BASE_URL` (optional, default: `http://localhost:11434`)
 - `OLLAMA_MODEL` (optional, default: `llama3`)
+- `LLM_MODEL` (optional): legacy fallback only if `OLLAMA_MODEL` is not set.
 - `EMBEDDING_BACKEND` (optional, default: `sentence-transformers`): set to `hash` for lightweight local/demo runs.
 
 ### 6) Demo (sample resume)
